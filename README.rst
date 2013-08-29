@@ -42,9 +42,15 @@ Optionally you can customize:
 Development
 -----------
 
+Before commiting anything, make sure to:
+
 Run the tests::
 
     make test
+
+Run the source code checker::
+
+    flake8
 
 The Django debug toolbar is enabled when the ``DEBUG`` environment variable is
 true and the ``django-debug-toolbar`` package is installed.
