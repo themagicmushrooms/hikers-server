@@ -1,0 +1,25 @@
+.container {
+	@include grid(12);
+}
+
+header, footer, content {
+	@include clearfix;
+}
+
+form {
+	.field {
+		@include clearfix;
+	}
+
+	.title {
+		@include cols(0);
+	}
+
+	.input {
+		@include cols(12);
+	}
+
+	.submit {
+		@include cols(12);
+	}
+}
