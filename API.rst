@@ -15,7 +15,7 @@ Here is the server's response::
     HTTP/1.1 200 OK
     {
         "uuid":"some_doc_uuid",
-        "rev":"946B7D1C",
+        "rev":"1-946B7D1C",
         "type":"hike",
         "name":"Grande Casse",
         "owner":"thebrain@acme.com",
