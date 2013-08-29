@@ -2,7 +2,7 @@ django = envdir envdir python manage.py
 testdjango = envdir tests/envdir python manage.py
 
 run:
-	foreman start
+	$(django) runserver
 
 test:
 	$(testdjango) test --traceback --failfast --noinput ${TEST}
