@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% load sekizai_tags staticfiles %}
+
+{% block content %}
+<div class="container">
+	<div class="pitch">
+		<h2>Your hikes</h2>
+	</div>
+</div>
+<div class="container">
+	{% for hike in object_list %}
+		<a href="{% url "hike_detail" hike.uuid %}">{{ hike.name }}</a>
+	{% endfor %}
+</div>
+{% endblock %}

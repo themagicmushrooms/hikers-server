@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% load sekizai_tags staticfiles %}
+
+{% block content %}
+<div class="container">
+	<div class="pitch">
+		<h2>{{ hike.name }}</h2>
+	</div>
+</div>
+<div class="container">
+	<p>{{ hike.date }}</p>
+	<br>
+	<p>Notes:</p>
+	<br>
+	<ul>
+	{% for note in notes %}
+		<li>{{ note.text }}</li>
+	{% endfor %}
+	</ul>
+</div>
+{% endblock %}

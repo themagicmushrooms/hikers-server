@@ -14,6 +14,7 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.home, name='home'),
     url(r'^hiking_albums_in_a_trice/$', views.landing, name='landing'),
+    url(r'^hikes/', include('hikers.hikes.urls')),
 )
 urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

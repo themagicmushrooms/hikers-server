@@ -118,6 +118,7 @@ INSTALLED_APPS = (
     'storages',
     'sekizai',
     'hikers.core',
+    'hikers.hikes',
     'django.contrib.admin',
     'rest_framework'
 )
@@ -184,6 +185,8 @@ LOGGING = {
         },
     },
 }
+
+AUTH_USER_MODEL = 'core.User'
 
 TEST_RUNNER = 'discover_runner.DiscoverRunner'
 TEST_DISCOVER_TOP_LEVEL = os.path.join(BASE_DIR, os.pardir)
