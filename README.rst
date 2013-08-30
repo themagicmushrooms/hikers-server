@@ -39,6 +39,10 @@ Optionally you can customize:
 
 * ``DEBUG``: set it to a non-empty value to enable the Django debug mode.
 
+Here is a bash command to show the current values:
+
+    (cd envdir/ && for i in *; do echo $i = $(cat $i) ; done)
+
 Development
 -----------
 
