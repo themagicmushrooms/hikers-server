@@ -122,7 +122,8 @@ the response::
                     "name":"Grande Casse",
                     "owner":"thebrain@acme.com",
                     "date": "2013-08-29T14:30:55Z"
-                }},
+                },
+            }
             {"uuid":"uuid1", "status": "did_not_change"},
             {"uuid":"uuid3", "status": "does_not_exist"},
         ]
@@ -131,6 +132,71 @@ the response::
 Note that the "does_not_exist" status does not mean that the document never
 existed. It could have been deleted.
 
-Bulk creations and updates
---------------------------
-To be defined.
+Bulk creations, updates and deletions
+-------------------------------------
+To perform documents creations, updates and deletions in one request, one can use the following bulk operation via POST or PUT::
+
+    POST /api/bulk/ HTTP/1.0
+    Content-Type: application/json
+    Accept: application/json
+    {
+        [
+            {"uuid":"uuid1", "operation": "create", "doc":
+                {
+                    "uuid":"uuid1",
+                    "type":"hike",
+                    "name":"Grande Casse",
+                    "owner":"thebrain@acme.com",
+                    "date": "2013-08-29T14:30:55Z"
+                }
+            },
+            {"uuid":"uuid2", "operation": "update", "doc":
+                {
+                    "uuid":"uuid2",
+                    "rev":"2-7051cbe5",
+                    "type":"hike",
+                    "name":"Pointe des Cerce",
+                    "owner":"thebrain@acme.com",
+                    "date": "2013-08-29T14:30:55Z"
+                }
+            },
+            {"uuid":"uuid3", "operation": "delete", rev":"2-eec205a9"},
+            {"uuid":"uuid4", "operation": "update", "doc":
+                {
+                    "uuid":"uuid4",
+                    "rev":"4-1111aae5",
+                    "type":"hike",
+                    "name":"Aiguille Noire",
+                    "owner":"thebrain@acme.com",
+                    "date": "2013-08-29T14:30:55Z"
+                }
+            }
+        ]
+    }
+
+The response will contain the results of the operation::
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+    {
+        [
+            {"uuid":"uuid1", "status": "created", "rev": "1-9242ABCD"},
+            {"uuid":"uuid2", "status": "conflict", "doc":
+                {
+                    "uuid":"uuid2",
+                    "rev":"3-4462aae5",
+                    "type":"hike",
+                    "name":"Pointe des Cerces",
+                    "owner":"thebrain@acme.com",
+                    "date": "2013-08-29T14:30:55Z"
+                }
+            },
+            {"uuid":"uuid3", "status": "deleted"},
+            {"uuid":"uuid4", "status": "updated", "rev": "5-3312CCCD"},
+        ]
+    }
+
+By default, the bulk call tries to perform as much operations as possible, and just returns failure or conflict for the operations
+which cannot be completed.
+
+Maybe we can add a transactional option later, i.e all operations are performed or none are performed.
