@@ -73,7 +73,18 @@ will occur::
 
     HTTP/1.1 409 Conflict
     Content-Type: application/json
-    {"error":"conflict"}
+    {
+        "error":"conflict",
+        // In case of a conflict, the latest version available on the server is returned
+        "doc": {
+            "uuid":"some_doc_id",
+            "rev":"2-8812BBCD",
+            "type":"hike",
+            "name":"Grande Casse, Vanoise",
+            "owner":"thebrain@acme.com",
+            "date": "2013-08-29T14:30:55Z"
+        }
+    }
 
 Deleting a document
 -------------------
@@ -89,7 +100,18 @@ Deleting a document without specifying the revision will result in a conflict re
 
     HTTP/1.1 409 Conflict
     Content-Type: application/json
-    {"error":"conflict"}
+    {
+        "error":"conflict",
+        // In case of a conflict, the latest version available on the server is returned
+        "doc": {
+            "uuid":"some_doc_id",
+            "rev":"3-8812BBCD",
+            "type":"hike",
+            "name":"Grande Casse, Vanoise",
+            "owner":"thebrain@acme.com",
+            "date": "2013-08-29T14:30:55Z"
+        }
+    }
 
 Getting changes on documents
 ----------------------------
@@ -99,6 +121,7 @@ To get the changes on a specific list of documents, perform a POST or a PUT to t
     Content-Type: application/json
     Accept: application/json
     {
+        "changes_requested":
         [
             {"uuid":"uuid1", "rev":"1-967a00df"},
             {"uuid":"uuid2", "rev":"2-7051cbe5"},
@@ -113,6 +136,7 @@ the response::
     HTTP/1.1 200 OK
     Content-Type: application/json
     {
+        "results":
         [
             {"uuid":"uuid1", "status": "updated", "doc":
                 {
@@ -140,6 +164,7 @@ To perform documents creations, updates and deletions in one request, one can us
     Content-Type: application/json
     Accept: application/json
     {
+        "operations":
         [
             {"uuid":"uuid1", "operation": "create", "doc":
                 {
@@ -179,8 +204,10 @@ The response will contain the results of the operation::
     HTTP/1.1 200 OK
     Content-Type: application/json
     {
+        "results":
         [
             {"uuid":"uuid1", "status": "created", "rev": "1-9242ABCD"},
+            // In case of a conflict, the latest version available on the server is returned
             {"uuid":"uuid2", "status": "conflict", "doc":
                 {
                     "uuid":"uuid2",
@@ -200,3 +227,5 @@ By default, the bulk call tries to perform as much operations as possible, and j
 which cannot be completed.
 
 Maybe we can add a transactional option later, i.e all operations are performed or none are performed.
+
+TODO: add a version header?
