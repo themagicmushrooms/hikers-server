@@ -6,10 +6,25 @@ Installation
 
 Requirements:
 
-* Python 2.7.4
-* PostgreSQL
+* Python 2.7.4 + dev (ubuntu package: python-dev)
+* PostgreSQL (ubuntu packages: postgresql postgresql-server-dev-?.?)
 * ubuntu package: daemontools (for "envdir")
 * ubuntu package: virtualenvwrapper (for "mkvirtualenv") (reopen a new shell after install)
+* for "pillow", maybe some more native libs for image formats supports, check the setup summary is like the following (in pip output)::
+
+    SETUP SUMMARY (Pillow 1.7.8 / PIL 1.1.7)
+    --------------------------------------------------------------------
+    version      1.7.8
+    platform     linux2 2.7.4 (default, Apr 19 2013, 18:28:01)
+                 [GCC 4.7.3]
+    --------------------------------------------------------------------
+    *** TKINTER support not available
+    
+    --- JPEG support available
+    --- ZLIB (PNG/ZIP) support available
+    --- FREETYPE2 support available
+    *** LITTLECMS support not available
+
 
 Getting the code::
 
@@ -39,12 +54,30 @@ Optionally you can customize:
 
 * ``DEBUG``: set it to a non-empty value to enable the Django debug mode.
 
-Here is a bash command to show the current values:
+Here is a bash command to show the current values::
 
     (cd envdir/ && for i in *; do echo $i = $(cat $i) ; done)
 
+Create the db in postgres::
+
+    sudo -u postgres createdb hikers
+    # inspired by http://obroll.com/how-to-reset-postgres-password-in-postgresql-ubuntu-11-10-oneiric/
+    sudo su postgres
+       psql
+          ALTER USER postgres WITH PASSWORD '123';
+
+"Sync" the db (django)::
+
+    make syncdb
+    make user
+       # enter a mail for your admin user and a password
+
 Development
 -----------
+
+Listing available commands::
+
+    make <tab>
 
 Before commiting anything, make sure to:
 
