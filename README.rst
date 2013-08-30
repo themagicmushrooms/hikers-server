@@ -8,16 +8,16 @@ Requirements:
 
 * Python 2.7.4
 * PostgreSQL
+* ubuntu package: daemontools (for "envdir")
+* ubuntu package: virtualenvwrapper (for "mkvirtualenv") (reopen a new shell after install)
 
 Getting the code::
 
     git clone https://github.com/creynaud/hikers-server
     cd hikers-server
-    mkvirtualenv -p python2.7 hikers-server
+    mkvirtualenv -p python2.7 hikers-server
     add2virtualenv .
     pip install -r requirements-dev.txt
-
-mkvirtualenv can be found in the "virtualenvwrapper" package on ubuntu.
 
 Configuration
 -------------
