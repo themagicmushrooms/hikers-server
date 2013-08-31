@@ -9,6 +9,7 @@ Requirements:
 * Python 2.7.4 + dev (ubuntu package: python-dev)
 * PostgreSQL (ubuntu packages: postgresql postgresql-server-dev-?.?)
 * ubuntu package: daemontools (for "envdir")
+* ubuntu package: pyflakes (for "flake8")
 * ubuntu package: virtualenvwrapper (for "mkvirtualenv") (reopen a new shell after install)
 * for "pillow", maybe some more native libs for image formats supports, check the setup summary is like the following (in pip output)::
 
@@ -28,7 +29,7 @@ Requirements:
 
 Getting the code::
 
-    git clone https://github.com/creynaud/hikers-server
+    git clone https://github.com/themagicmushrooms/hikers-server
     cd hikers-server
     mkvirtualenv -p python2.7 hikers-server
     add2virtualenv .
