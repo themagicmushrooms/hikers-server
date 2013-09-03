@@ -2,6 +2,7 @@ Hikers Log server API
 =====================
 
 This API is inspired by the couchdb document API: http://wiki.apache.org/couchdb/HTTP_Document_API
+All documents have a uuid, a revision (once created) and a type.
 
 Getting a document
 ------------------
@@ -14,9 +15,11 @@ Here is the server's response::
 
     HTTP/1.1 200 OK
     {
+        // these are mandatory
         "uuid":"some_doc_uuid",
         "rev":"1-946B7D1C",
         "type":"hike",
+        // these are specific to the document type
         "name":"Grande Casse",
         "owner":"thebrain@acme.com",
         "date": "2013-08-29T14:30:55Z"
@@ -88,9 +91,9 @@ will occur::
 
 Deleting a document
 -------------------
-To delete a document, perform a DELETE operation at the document's location, passing the rev parameter with the document's current revision::
+To delete a document, perform a DELETE operation at the document's location, passing the uuid and the revision::
 
-    DELETE /api/document/some_doc_uuid?rev=2-1582603387 HTTP/1.0
+    DELETE /api/document/some_doc_uuid?rev=2-8812BBCD HTTP/1.0
 
 And the response::
 

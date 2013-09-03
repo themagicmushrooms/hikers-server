@@ -119,8 +119,9 @@ INSTALLED_APPS = (
     'sekizai',
     'hikers.core',
     'hikers.hikes',
+    'hikers.api',
     'django.contrib.admin',
-    'rest_framework'
+    'rest_framework',
 )
 
 REST_FRAMEWORK = {
