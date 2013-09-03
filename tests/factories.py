@@ -45,3 +45,7 @@ class NoteFactory(Factory):
     @lazy_attribute
     def text(self):
         return "Almost no snow."
+
+    @lazy_attribute
+    def position(self):
+        return "POINT(2.0 45.0)"
