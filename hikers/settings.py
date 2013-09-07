@@ -7,7 +7,7 @@ DEBUG = os.environ.get('DEBUG', False)
 TEMPLATE_DEBUG = DEBUG
 
 DATABASES = {'default': dj_database_url.config(
-    default="postgres://postgres@localhost:123/hikers"
+    default="postgis://postgres@localhost:123/hikers"
 )}
 
 TIME_ZONE = 'Europe/Berlin'
@@ -115,6 +115,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     'storages',
     'sekizai',
     'hikers.core',

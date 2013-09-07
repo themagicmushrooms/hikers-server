@@ -8,9 +8,11 @@ Requirements:
 
 * Python 2.7.4 + dev (ubuntu package: python-dev)
 * PostgreSQL (ubuntu packages: postgresql postgresql-server-dev-?.?)
+* Postgis (ubuntu packages: postgresql-9.1-postgis)
 * ubuntu package: daemontools (for "envdir")
 * ubuntu package: pyflakes (for "flake8")
 * ubuntu package: virtualenvwrapper (for "mkvirtualenv") (reopen a new shell after install)
+* ubuntu package: libgeos-c1
 * for "pillow", maybe some more native libs for image formats supports, check the setup summary is like the following (in pip output)::
 
     SETUP SUMMARY (Pillow 1.7.8 / PIL 1.1.7)
@@ -59,13 +61,22 @@ Here is a bash command to show the current values::
 
     (cd envdir/ && for i in *; do echo $i = $(cat $i) ; done)
 
-Create the db in postgres::
 
-    sudo -u postgres createdb hikers
+Create a super user in postgres::
+
     # inspired by http://obroll.com/how-to-reset-postgres-password-in-postgresql-ubuntu-11-10-oneiric/
     sudo su postgres
        psql
           ALTER USER postgres WITH PASSWORD '123';
+
+Create the db in postgres and upgrate it with postgis (adapt paths if needed)::
+
+    for dbname in hikers template_postgis
+    do
+        sudo -u postgres createdb $dbname
+        sudo -u postgres psql -d $dbname -f /usr/share/postgresql/9.1/contrib/postgis-1.5/postgis.sql
+        sudo -u postgres psql -d $dbname -f /usr/share/postgresql/9.1/contrib/postgis-1.5/spatial_ref_sys.sql
+    done
 
 "Sync" the db (django)::
 

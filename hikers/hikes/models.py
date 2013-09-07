@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from django.db import models
+from django.contrib.gis.db import models
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -34,6 +34,9 @@ class Note(models.Model):
     text = models.TextField(_('Text'), null=True, blank=True)
     hike = models.ForeignKey(Hike, verbose_name=_('Hike'),
                              related_name='notes')
+    position = models.PointField(null=True, geography=True)
+
+    objects = models.GeoManager()
 
     class Meta:
         ordering = ['date']
