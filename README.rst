@@ -79,6 +79,7 @@ Create the db in postgres and upgrate it with postgis (adapt paths if needed)::
     done
 
 Note that if you drop and recreate the hikers database later, you can just call::
+
     createdb -U postgres -T template_postgis hikers
 
 "Sync" the db (django)::
