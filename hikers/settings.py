@@ -121,7 +121,8 @@ INSTALLED_APPS = (
     'hikers.core',
     'hikers.hikes',
     'django.contrib.admin',
-    'rest_framework'
+    'rest_framework',
+    'leaflet',
 )
 
 REST_FRAMEWORK = {
@@ -183,6 +184,10 @@ LOGGING = {
         'hikers': {
             'handlers': ['console', 'mail_admins'],
             'level': 'INFO',
+        },
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'ERROR',
         },
     },
 }

@@ -1,6 +1,26 @@
 {% extends "base.html" %}
 
 {% load sekizai_tags staticfiles %}
+{% load leaflet_tags %}
+
+{% block extrahead %}
+  {% leaflet_js %}
+  {% leaflet_css %}
+  <script type="text/javascript">
+    function notesmap_init(map, options) {
+      var locations = [];
+      var location = null;
+      {% for note in notes %}
+        location = [{{ note.position.x }}, {{ note.position.y }}];
+        locations.push(location);
+        L.marker(location).addTo(map)
+        .bindPopup('{{ note.text }}')
+        .openPopup();
+      {% endfor %}
+      map.fitBounds(locations);
+    }
+  </script>
+{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -18,5 +38,6 @@
 		<li>{{ note.text }}</li>
 	{% endfor %}
 	</ul>
+  {% leaflet_map "notesmap" callback="window.notesmap_init" %}
 </div>
 {% endblock %}
