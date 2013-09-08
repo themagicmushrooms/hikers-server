@@ -11,11 +11,13 @@
       var locations = [];
       var location = null;
       {% for note in notes %}
-        location = [{{ note.position.x }}, {{ note.position.y }}];
-        locations.push(location);
-        L.marker(location).addTo(map)
-        .bindPopup('{{ note.text }}')
-        .openPopup();
+        {% if note.position %}
+          location = [{{ note.position.x }}, {{ note.position.y }}];
+          locations.push(location);
+          L.marker(location).addTo(map)
+          .bindPopup('{{ note.text }}')
+          .openPopup();
+        {% endif %}
       {% endfor %}
       map.fitBounds(locations);
     }

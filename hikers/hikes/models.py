@@ -34,7 +34,7 @@ class Note(models.Model):
     text = models.TextField(_('Text'), null=True, blank=True)
     hike = models.ForeignKey(Hike, verbose_name=_('Hike'),
                              related_name='notes')
-    position = models.PointField(null=True, geography=True)
+    position = models.PointField(null=True, geography=True, blank=True)
 
     objects = models.GeoManager()
 
