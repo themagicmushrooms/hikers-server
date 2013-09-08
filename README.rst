@@ -78,6 +78,10 @@ Create the db in postgres and upgrate it with postgis (adapt paths if needed)::
         sudo -u postgres psql -d $dbname -f /usr/share/postgresql/9.1/contrib/postgis-1.5/spatial_ref_sys.sql
     done
 
+Note that if you drop and recreate the hikers database later, you can just call::
+
+    createdb -U postgres -T template_postgis hikers
+
 "Sync" the db (django)::
 
     make syncdb
