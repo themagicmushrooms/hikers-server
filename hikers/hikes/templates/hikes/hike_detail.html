@@ -19,7 +19,9 @@
           .openPopup();
         {% endif %}
       {% endfor %}
-      map.fitBounds(locations);
+      if (locations.length != 0) {
+        map.fitBounds(locations);
+      }
     }
   </script>
 {% endblock %}
