@@ -232,3 +232,9 @@ if DEBUG:
             'debug_toolbar.panels.signals.SignalDebugPanel',
             'debug_toolbar.panels.logger.LoggingPanel',
         )
+LEAFLET_CONFIG = {
+    'TILES': [
+        ('Cyclemap', 'http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png', '&copy; OpenCycleMap &amp; OpenStreetMap'),
+        ('Openstreetmap', 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', '&copy; OpenStreetMap'),
+    ],
+}

@@ -9,8 +9,10 @@
 	</div>
 </div>
 <div class="container">
+  <ul>
 	{% for hike in object_list %}
-		<a href="{% url "hike_detail" hike.uuid %}">{{ hike.name }}</a>
+		<li><a href="{% url "hike_detail" hike.uuid %}">{{ hike.name }}</a></li>
 	{% endfor %}
+  </ul>
 </div>
 {% endblock %}

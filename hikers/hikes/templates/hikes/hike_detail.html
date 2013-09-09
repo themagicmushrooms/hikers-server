@@ -7,21 +7,29 @@
   {% leaflet_js %}
   {% leaflet_css %}
   <script type="text/javascript">
+    var notesMap = null;
+    var markers = {};
     function notesmap_init(map, options) {
       var locations = [];
       var location = null;
       {% for note in notes %}
         {% if note.position %}
           location = [{{ note.position.x }}, {{ note.position.y }}];
+          var marker = L.marker(location).addTo(map)
+          .bindPopup('{{ note.text }}');
           locations.push(location);
-          L.marker(location).addTo(map)
-          .bindPopup('{{ note.text }}')
-          .openPopup();
+          markers['{{ note.uuid }}'] = marker;
         {% endif %}
       {% endfor %}
       if (locations.length != 0) {
         map.fitBounds(locations);
+        map.zoomOut(); // Because fitBounds does not fit well enough
       }
+      notesMap = map;
+    }
+    function popupNote(noteUuid) {
+      var marker = markers[noteUuid];
+      marker.togglePopup();
     }
   </script>
 {% endblock %}
@@ -39,7 +47,13 @@
 	<br>
 	<ul>
 	{% for note in notes %}
-		<li>{{ note.text }}</li>
+		<li>{{ note.text }}
+      {% if note.position %}
+        <img src="{% static "leaflet/images/marker-icon.png" %}"
+             onclick="popupNote('{{ note.uuid }}')"
+            />
+      {% endif %}
+    </li>
 	{% endfor %}
 	</ul>
   {% leaflet_map "notesmap" callback="window.notesmap_init" %}
