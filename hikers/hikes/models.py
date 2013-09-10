@@ -12,9 +12,33 @@ def uuid():
     return str(uuid4())
 
 
-class Hike(models.Model):
-    uuid = models.CharField(_('uuid'), max_length=255, default=uuid,
+def revision():
+    return "0-{0}".format(uuid())
+
+
+class Document(models.Model):
+    uuid = models.CharField(_('UUID'), max_length=255, default=uuid,
                             unique=True, db_index=True)
+    revision = models.CharField(_('Revision'), max_length=255,
+                                default=revision())
+    doc_type = models.CharField(_('Document type'), max_length=255)
+
+    def increment_revision(self):
+        revision_number = int(self.revision[:self.revision.index('-')])
+        self.revision = "{0}-{1}".format(revision_number + 1, uuid())
+
+    def save(self, *args, **kwargs):
+        if not self.doc_type:
+            self.doc_type = self.__class__.doc_type_name()
+        self.increment_revision()
+        super(Document, self).save(*args, **kwargs)
+
+    @classmethod
+    def doc_type_name(cls):
+        raise NotImplementedError
+
+
+class Hike(Document):
     owner = models.ForeignKey(User, verbose_name=_('Owner'),
                               related_name='hikes')
     name = models.CharField(_('Name'), max_length=255, null=True, blank=True)
@@ -26,10 +50,12 @@ class Hike(models.Model):
     def __unicode__(self):
         return u"{0}, by {1}".format(self.name, self.owner.full_name)
 
+    @classmethod
+    def doc_type_name(cls):
+        return 'hike'
 
-class Note(models.Model):
-    uuid = models.CharField(_('uuid'), max_length=255, default=uuid,
-                            unique=True, db_index=True)
+
+class Note(Document):
     date = models.DateTimeField(_('Date'), default=timezone.now)
     text = models.TextField(_('Text'), null=True, blank=True)
     hike = models.ForeignKey(Hike, verbose_name=_('Hike'),
@@ -40,3 +66,14 @@ class Note(models.Model):
 
     class Meta:
         ordering = ['date']
+
+    @classmethod
+    def doc_type_name(cls):
+        return 'note'
+
+
+# TODO build this by introspection?
+TYPE_TO_CLASS_MAP = {
+    Hike.doc_type_name(): Hike,
+    Note.doc_type_name(): Note
+}

@@ -74,6 +74,7 @@ Create the db in postgres and upgrate it with postgis (adapt paths if needed)::
 
     for dbname in hikers template_postgis
     do
+        sudo -u postgres dropdb $dbname
         sudo -u postgres createdb $dbname
         sudo -u postgres psql -d $dbname -f /usr/share/postgresql/9.1/contrib/postgis-1.5/postgis.sql
         sudo -u postgres psql -d $dbname -f /usr/share/postgresql/9.1/contrib/postgis-1.5/spatial_ref_sys.sql
@@ -87,7 +88,18 @@ Note that if you drop and recreate the hikers database later, you can just call:
 
     make syncdb
     make user
-       # enter a mail for your admin user and a password
+       # enter a mail for your *admin* user and a password
+
+
+
+Then you can run and create stuff manually to see the thing
+
+    make run
+    http://127.0.0.1:8000/admin
+    http://127.0.0.1:8000
+
+
+
 
 Development
 -----------
