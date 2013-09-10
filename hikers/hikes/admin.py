@@ -4,4 +4,4 @@ from .models import Hike, Note
 
 
 admin.site.register(Hike)
-admin.site.register(Note, admin.GeoModelAdmin)
+admin.site.register(Note, admin.OSMGeoAdmin)

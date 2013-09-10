@@ -13,6 +13,7 @@ Requirements:
 * ubuntu package: pyflakes (for "flake8")
 * ubuntu package: virtualenvwrapper (for "mkvirtualenv") (reopen a new shell after install)
 * ubuntu package: libgeos-c1
+* ubuntu package: libgdal1-1.7.0
 * for "pillow", maybe some more native libs for image formats supports, check the setup summary is like the following (in pip output)::
 
     SETUP SUMMARY (Pillow 1.7.8 / PIL 1.1.7)
