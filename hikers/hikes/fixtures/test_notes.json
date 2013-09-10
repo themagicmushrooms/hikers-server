@@ -29,7 +29,7 @@
   "fields": {
     "date": "2013-09-08T11:02:25Z", 
     "text": "Lost my wallet around here", 
-    "position": "POINT (43.5921570000000003 7.0953229999999996)", 
+    "position": "POINT (7.0953229999999996 43.5921570000000003)",
     "uuid": "277b0280-18b8-4255-890c-0f044472f3eb", 
     "hike": 1
   }
@@ -40,7 +40,7 @@
   "fields": {
     "date": "2013-09-08T11:05:13Z", 
     "text": "Discovered loss of wallet only here", 
-    "position": "POINT (43.5885350000000003 7.0989060000000004)", 
+    "position": "POINT (7.0989060000000004 43.5885350000000003)",
     "uuid": "0c8179bc-614f-4f2f-b190-ceec6843aca0", 
     "hike": 1
   }

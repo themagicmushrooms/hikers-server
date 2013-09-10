@@ -3,7 +3,8 @@ from django.conf.urls import patterns, url, include
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-from ratelimitbackend import admin
+from django.contrib.gis import admin
+#from ratelimitbackend import admin
 
 from . import views
 
@@ -18,3 +19,4 @@ urlpatterns = patterns(
 )
 urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
