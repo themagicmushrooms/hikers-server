@@ -11,26 +11,36 @@ class DocumentSerializerMixin(serializers.ModelSerializer):
 
 
 class HikeSerializer(DocumentSerializerMixin):
-    owner = serializers.SerializerMethodField('get_owner')
+    owner = serializers.Field(source='owner.email')
 
     class Meta:
         model = Hike
-        fields = ['uuid', 'revision', 'doc_type', 'owner', 'name', 'date']
+        fields = ['uuid', 'revision', 'doc_type', 'name', 'date', 'owner']
 
-    def get_owner(self, obj):
-        return obj.owner.email
+    def restore_object(self, attrs, instance=None):
+        hike = super(HikeSerializer, self).restore_object(attrs, instance)
+        hike.owner = self.context['request'].user
+        return hike
 
 
 class NoteSerializer(DocumentSerializerMixin):
     hike_uuid = serializers.SerializerMethodField('get_hike_uuid')
+    latitude = serializers.SerializerMethodField('get_latitude')
+    longitude = serializers.SerializerMethodField('get_longitude')
 
     class Meta:
         model = Note
-        fields = ['uuid', 'revision', 'doc_type', 'date', 'text', 'position',
-                  'hike_uuid']
+        fields = ['uuid', 'revision', 'doc_type', 'date', 'text', 'latitude',
+                  'longitude', 'hike_uuid']
 
     def get_hike_uuid(self, obj):
         return obj.hike.uuid
+
+    def get_latitude(self, obj):
+        return obj.position.y
+
+    def get_longitude(self, obj):
+        return obj.position.x
 
 
 # TODO build this by introspection?
