@@ -6,9 +6,9 @@ All documents have a uuid, a revision (once created) and a type.
 
 Getting a document
 ------------------
-To retrieve a document, simply perform a GET operation at the document's URL::
+To retrieve a document, simply perform a GET operation at the document's URL (so far hikes or notes)::
 
-    GET /api/document/some_doc_uuid HTTP/1.0
+    GET /api/hikes/some_doc_uuid HTTP/1.0
     Accept: application/json
 
 Here is the server's response::
@@ -29,7 +29,7 @@ Creating a document
 -------------------
 The POST or PUT operations can be used to create a new document::
 
-    POST /api/document/ HTTP/1.0
+    POST /api/hikes/ HTTP/1.0
     Content-Type: application/json
     Accept: application/json
     {
@@ -52,7 +52,7 @@ Updating a document
 -------------------
 The POST or PUT operations can be used to update a document::
 
-    PUT /api/document/ HTTP/1.0
+    PUT /api/hikes/ HTTP/1.0
     Content-Type: application/json
     Accept: application/json
     {
@@ -93,11 +93,11 @@ Deleting a document
 -------------------
 To delete a document, perform a DELETE operation at the document's location, passing the uuid and the revision::
 
-    DELETE /api/document/some_doc_uuid?rev=2-8812BBCD HTTP/1.0
+    DELETE /api/hikes/some_doc_uuid?rev=2-8812BBCD HTTP/1.0
 
 And the response::
 
-    HTTP/1.1 200 OK
+    HTTP/1.1 204 NO CONTENT
 
 Deleting a document without specifying the revision will result in a conflict response::
 

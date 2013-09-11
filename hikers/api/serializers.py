@@ -41,10 +41,3 @@ class NoteSerializer(DocumentSerializerMixin):
 
     def get_longitude(self, obj):
         return obj.position.x
-
-
-# TODO build this by introspection?
-TYPE_TO_SERIALIZER_CLASS_MAP = {
-    Hike.doc_type_name(): HikeSerializer,
-    Note.doc_type_name(): NoteSerializer
-}
