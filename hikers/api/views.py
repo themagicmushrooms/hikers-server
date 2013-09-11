@@ -12,13 +12,13 @@ class DocumentViewSetMixin(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         obj = self.get_object()
-        revision = self.request.QUERY_PARAMS.get('revision')
+        revision = request.QUERY_PARAMS.get('revision')
         if not revision:
             data = {
                 "error": "You must specify a 'revision' query parameter"
             }
             return Response(data, status=HTTP_400_BAD_REQUEST)
-        if obj.revision != self.request.QUERY_PARAMS['revision']:
+        if obj.revision != revision:
             data = {
                 "error": ("Conflict, you are trying to delete an old revision "
                           "of this object")
@@ -26,6 +26,23 @@ class DocumentViewSetMixin(viewsets.ModelViewSet):
             return Response(data, status=HTTP_409_CONFLICT)
         return super(DocumentViewSetMixin, self).destroy(request, *args,
                                                          **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        obj = self.get_object()
+        revision = request.DATA.get('revision')
+        if not revision:
+            data = {
+                "error": "You must specify a 'revision' in the request data"
+            }
+            return Response(data, status=HTTP_400_BAD_REQUEST)
+        if obj.revision != revision:
+            data = {
+                "error": ("Conflict, you are trying to update an old revision "
+                          "of this object")
+            }
+            return Response(data, status=HTTP_409_CONFLICT)
+        return super(DocumentViewSetMixin, self).update(request, *args,
+                                                        **kwargs)
 
 
 class HikesViewSet(DocumentViewSetMixin):

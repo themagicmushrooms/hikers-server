@@ -27,7 +27,7 @@ Here is the server's response::
 
 Creating a document
 -------------------
-The POST or PUT operations can be used to create a new document::
+The POST operation can be used to create a new document::
 
     POST /api/hikes/ HTTP/1.0
     Content-Type: application/json
@@ -50,7 +50,7 @@ Here is the server's response::
 
 Updating a document
 -------------------
-The POST or PUT operations can be used to update a document::
+The PUT operation can be used to update a document::
 
     PUT /api/hikes/ HTTP/1.0
     Content-Type: application/json

@@ -1,4 +1,8 @@
+from django.contrib.gis import forms as gis_forms
+from django import forms
+
 from rest_framework import serializers
+from rest_framework.fields import WritableField
 
 from ..hikes.models import Hike, Note
 
@@ -23,21 +27,53 @@ class HikeSerializer(DocumentSerializerMixin):
         return hike
 
 
+class PointField(WritableField):
+    type_name = 'PointField'
+    type_label = 'point'
+    form_field_class = gis_forms.GeometryField
+
+    def to_native(self, value):
+        return {"latitude": value.y, "longitude": value.x}
+
+    def from_native(self, value):
+        geometry_field = self.form_field_class()
+        if isinstance(value, (unicode, str)) and "Point" in value:
+            # Value is coming from browseable API form
+            return geometry_field.clean(value)
+        elif isinstance(value, dict):
+            latitude = value.get("latitude")
+            if not latitude:
+                raise forms.ValidationError("Missing 'latitude'")
+            longitude = value.get("longitude")
+            if not longitude:
+                raise forms.ValidationError("Missing 'longitude'")
+            new_value = "Point ({0} {1})".format(longitude, latitude)
+            return geometry_field.clean(new_value)
+        else:
+            raise forms.ValidationError("Invalid 'position'")
+
+
+class HikeUUIDField(WritableField):
+    type_name = 'HikeUUIDField'
+    type_label = 'hike uuid'
+    form_field_class = forms.CharField
+
+    def to_native(self, value):
+        return value.hike.uuid
+
+    def from_native(self, value):
+        try:
+            return Hike.objects.get(uuid=value)
+        except Hike.DoesNotExist:
+            raise forms.ValidationError(
+                "Hike with uuid={0} does not exist".format(value))
+
+
 class NoteSerializer(DocumentSerializerMixin):
-    hike_uuid = serializers.SerializerMethodField('get_hike_uuid')
-    latitude = serializers.SerializerMethodField('get_latitude')
-    longitude = serializers.SerializerMethodField('get_longitude')
+    hike = HikeUUIDField()
+    position = PointField()
 
     class Meta:
         model = Note
-        fields = ['uuid', 'revision', 'doc_type', 'date', 'text', 'latitude',
-                  'longitude', 'hike_uuid']
-
-    def get_hike_uuid(self, obj):
-        return obj.hike.uuid
-
-    def get_latitude(self, obj):
-        return obj.position.y
-
-    def get_longitude(self, obj):
-        return obj.position.x
+        fields = ['uuid', 'revision', 'doc_type', 'date', 'text', 'position',
+                  'hike']
