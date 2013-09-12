@@ -71,6 +71,9 @@ class Note(Document):
     def doc_type_name(cls):
         return 'note'
 
+    def __unicode__(self):
+        return u"Note {0}, by {1}".format(self.uuid, self.hike.owner.full_name)
+
 
 # TODO build this by introspection?
 TYPE_TO_CLASS_MAP = {
