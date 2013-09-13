@@ -32,12 +32,19 @@ class PointField(WritableField):
     type_label = 'point'
     form_field_class = gis_forms.GeometryField
 
+    def __init__(self, *args, **kwargs):
+        super(PointField, self).__init__(*args, **kwargs)
+
     def to_native(self, value):
+        if value is None:
+            return None
         return {"latitude": value.y, "longitude": value.x}
 
     def from_native(self, value):
+        if value is None or value == '':
+            return None
         geometry_field = self.form_field_class()
-        if isinstance(value, (unicode, str)) and "Point" in value:
+        if isinstance(value, (unicode, str)) and "POINT" in value:
             # Value is coming from browseable API form
             return geometry_field.clean(value)
         elif isinstance(value, dict):
@@ -47,7 +54,7 @@ class PointField(WritableField):
             longitude = value.get("longitude")
             if not longitude:
                 raise forms.ValidationError("Missing 'longitude'")
-            new_value = "Point ({0} {1})".format(longitude, latitude)
+            new_value = "POINT ({0} {1})".format(longitude, latitude)
             return geometry_field.clean(new_value)
         else:
             raise forms.ValidationError("Invalid 'position'")
@@ -71,7 +78,7 @@ class HikeUUIDField(WritableField):
 
 class NoteSerializer(DocumentSerializerMixin):
     hike = HikeUUIDField()
-    position = PointField()
+    position = PointField(required=False)
 
     class Meta:
         model = Note
