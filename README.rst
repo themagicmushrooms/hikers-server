@@ -8,11 +8,9 @@ Requirements:
 
 * Python 2.7.4 + dev (ubuntu package: python-dev)
 * PostgreSQL (ubuntu packages: postgresql postgresql-server-dev-?.?)
-* Postgis (ubuntu packages: postgresql-9.1-postgis)
 * ubuntu package: daemontools (for "envdir")
 * ubuntu package: pyflakes (for "flake8")
 * ubuntu package: virtualenvwrapper (for "mkvirtualenv") (reopen a new shell after install)
-* ubuntu package: libgeos-c1
 * ubuntu package: libgdal1-1.7.0
 * for "pillow", maybe some more native libs for image formats supports, check the setup summary is like the following (in pip output)::
 
@@ -70,19 +68,10 @@ Create a super user in postgres::
        psql
           ALTER USER postgres WITH PASSWORD '123';
 
-Create the db in postgres and upgrate it with postgis (adapt paths if needed)::
+Create the db in postgres::
 
-    for dbname in hikers template_postgis
-    do
-        sudo -u postgres dropdb $dbname
-        sudo -u postgres createdb $dbname
-        sudo -u postgres psql -d $dbname -f /usr/share/postgresql/9.1/contrib/postgis-1.5/postgis.sql
-        sudo -u postgres psql -d $dbname -f /usr/share/postgresql/9.1/contrib/postgis-1.5/spatial_ref_sys.sql
-    done
-
-Note that if you drop and recreate the hikers database later, you can just call::
-
-    createdb -U postgres -T template_postgis hikers
+    sudo -u postgres dropdb hikers
+    sudo -u postgres createdb hikers
 
 "Sync" the db (django)::
 

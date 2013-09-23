@@ -1,10 +1,11 @@
-from django.contrib.gis import forms as gis_forms
+import re
+
 from django import forms
 
 from rest_framework import serializers
 from rest_framework.fields import WritableField
 
-from ..hikes.models import Hike, Note
+from ..hikes.models import Hike, Note, Position
 
 
 class DocumentSerializerMixin(serializers.ModelSerializer):
@@ -27,39 +28,6 @@ class HikeSerializer(DocumentSerializerMixin):
         return hike
 
 
-class PointField(WritableField):
-    type_name = 'PointField'
-    type_label = 'point'
-    form_field_class = gis_forms.GeometryField
-
-    def __init__(self, *args, **kwargs):
-        super(PointField, self).__init__(*args, **kwargs)
-
-    def to_native(self, value):
-        if value is None:
-            return None
-        return {"latitude": value.y, "longitude": value.x}
-
-    def from_native(self, value):
-        if value is None or value == '':
-            return None
-        geometry_field = self.form_field_class()
-        if isinstance(value, (unicode, str)) and "POINT" in value:
-            # Value is coming from browseable API form
-            return geometry_field.clean(value)
-        elif isinstance(value, dict):
-            latitude = value.get("latitude")
-            if not latitude:
-                raise forms.ValidationError("Missing 'latitude'")
-            longitude = value.get("longitude")
-            if not longitude:
-                raise forms.ValidationError("Missing 'longitude'")
-            new_value = "POINT ({0} {1})".format(longitude, latitude)
-            return geometry_field.clean(new_value)
-        else:
-            raise forms.ValidationError("Invalid 'position'")
-
-
 class HikeUUIDField(WritableField):
     type_name = 'HikeUUIDField'
     type_label = 'hike uuid'
@@ -76,9 +44,45 @@ class HikeUUIDField(WritableField):
                 "Hike with uuid={0} does not exist".format(value))
 
 
+class PositionSerializer(WritableField):
+    type_name = 'Position'
+    type_label = 'position'
+
+    def __init__(self, *args, **kwargs):
+        super(PositionSerializer, self).__init__(*args, **kwargs)
+
+    def to_native(self, value):
+        if value is None:
+            return None
+        return {"latitude": value.latitude, "longitude": value.longitude}
+
+    def from_native(self, value):
+        if value is None or value == '':
+            return None
+        if isinstance(value, (unicode, str)) and "POINT" in value:
+            # Value is coming from browseable API form
+            m = re.match('POINT\(([0-9.]+) ([0-9.]+)\)', value)
+            if m:
+                return Position(latitude=m.group(2), longitude=m.group(1))
+            else:
+                raise forms.ValidationError("Invalid 'position'")
+        elif isinstance(value, dict):
+            latitude = value.get("latitude")
+            if not latitude:
+                raise forms.ValidationError("Missing 'latitude'")
+            longitude = value.get("longitude")
+            if not longitude:
+                raise forms.ValidationError("Missing 'longitude'")
+            p = Position(latitude=latitude, longitude=longitude)
+            print 'will return %s' % p
+            return p
+        else:
+            raise forms.ValidationError("Invalid 'position'")
+
+
 class NoteSerializer(DocumentSerializerMixin):
     hike = HikeUUIDField()
-    position = PointField(required=False)
+    position = PositionSerializer()
 
     class Meta:
         model = Note

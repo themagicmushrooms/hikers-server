@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from django.contrib.gis.db import models
+from django.db import models
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -55,14 +55,20 @@ class Hike(Document):
         return 'hike'
 
 
+class Position(models.Model):
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+
+    def __unicode__(self):
+        return u"[{0}N,{1}E]".format(self.latitude, self.longitude)
+
+
 class Note(Document):
     date = models.DateTimeField(_('Date'), default=timezone.now)
     text = models.TextField(_('Text'), null=True, blank=True)
     hike = models.ForeignKey(Hike, verbose_name=_('Hike'),
                              related_name='notes')
-    position = models.PointField(null=True, geography=True, blank=True)
-
-    objects = models.GeoManager()
+    position = models.OneToOneField(Position, null=True, blank=True)
 
     class Meta:
         ordering = ['date']

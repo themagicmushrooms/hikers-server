@@ -305,15 +305,21 @@ class NonGenericAPITestAuthenticated(APITestCase):
             "hike": hike.uuid
         }
         self.client.force_authenticate(user=hike.owner)
+        print 'posting'
         response = self.client.post(url, data)
+        print 'response=%s' % response
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         note = Note.objects.get(uuid=data['uuid'])
         self.assertEqual(note.text, data['text'])
         self.assertIsNotNone(note.date)
         self.assertEqual(note.hike, hike)
-        self.assertTrue(abs(note.position.y - data['position']['latitude'])
+        import pprint
+        pprint.pprint(data)
+        pprint.pprint(note)
+        pprint.pprint(note.position)
+        self.assertTrue(abs(note.position.latitude - data['position']['latitude'])
                         < 0.001)
-        self.assertTrue(abs(note.position.x - data['position']['longitude'])
+        self.assertTrue(abs(note.position.longitude - data['position']['longitude'])
                         < 0.001)
 
     def test_post_note_no_hike(self):
@@ -355,9 +361,9 @@ class NonGenericAPITestAuthenticated(APITestCase):
         self.assertEqual(note.text, data['text'])
         self.assertIsNotNone(note.date)
         self.assertEqual(note.hike.uuid, data['hike'])
-        self.assertTrue(abs(note.position.y - data['position']['latitude'])
+        self.assertTrue(abs(note.position.latitude - data['position']['latitude'])
                         < 0.001)
-        self.assertTrue(abs(note.position.x - data['position']['longitude'])
+        self.assertTrue(abs(note.position.longitude - data['position']['longitude'])
                         < 0.001)
 
     def test_put_note_no_revision(self):

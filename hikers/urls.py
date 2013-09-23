@@ -3,8 +3,7 @@ from django.conf.urls import patterns, url, include
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-from django.contrib.gis import admin
-#from ratelimitbackend import admin
+from ratelimitbackend import admin
 
 from . import views
 

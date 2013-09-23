@@ -2,7 +2,7 @@ from factory import Factory, lazy_attribute, Sequence
 from factory.declarations import SubFactory
 
 from hikers.core.models import User
-from hikers.hikes.models import Hike, Note
+from hikers.hikes.models import Hike, Note, Position
 
 
 class UserFactory(Factory):
@@ -48,4 +48,4 @@ class NoteFactory(Factory):
 
     @lazy_attribute
     def position(self):
-        return "POINT(2.0 45.0)"
+        return Position(longitude=2.0, latitude=45.0)

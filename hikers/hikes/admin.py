@@ -1,4 +1,4 @@
-from django.contrib.gis import admin
+from django.contrib import admin
 
 from .models import Hike, Note
 
@@ -7,15 +7,11 @@ class DocumentAdmin(admin.ModelAdmin):
     readonly_fields = ('uuid', 'revision', 'doc_type')
 
 
-class DocumentGeoAdmin(admin.OSMGeoAdmin):
-    readonly_fields = ('uuid', 'revision', 'doc_type')
-
-
 class HikeAdmin(DocumentAdmin):
     model = Hike
 
 
-class NoteAdmin(DocumentGeoAdmin):
+class NoteAdmin(DocumentAdmin):
     model = Note
 
 admin.site.register(Hike, HikeAdmin)

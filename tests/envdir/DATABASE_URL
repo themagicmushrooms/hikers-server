@@ -1,1 +1,1 @@
-postgis://postgres:123@localhost:5432/hikers
+postgres://postgres:123@localhost:5432/hikers
