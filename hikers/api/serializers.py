@@ -81,7 +81,7 @@ class PositionSerializer(WritableField):
 
 class NoteSerializer(DocumentSerializerMixin):
     hike = HikeUUIDField()
-    position = PositionSerializer()
+    position = PositionSerializer(required=False)
 
     class Meta:
         model = Note

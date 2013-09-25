@@ -14,7 +14,7 @@
       var location = null;
       {% for note in notes %}
         {% if note.position %}
-          location = new L.LatLng({{ note.position.y }}, {{ note.position.x }});
+          location = new L.LatLng({{ note.position.latitude }}, {{ note.position.longitude }});
           var marker = L.marker(location).addTo(map)
           .bindPopup('{{ note.text }}');
           locations.push(location);
