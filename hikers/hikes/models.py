@@ -1,7 +1,9 @@
 from uuid import uuid4
+import pickle
 
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
@@ -55,12 +57,36 @@ class Hike(Document):
         return 'hike'
 
 
-class Position(models.Model):
-    latitude = models.FloatField()
-    longitude = models.FloatField()
+class Position(object):
+    def __init__(self, latitude, longitude):
+        try:
+            self.latitude = float(latitude)
+            self.longitude = float(longitude)
+        except ValueError:
+            raise models.exceptions.ValidationError('Invalid arguments')
 
-    def __unicode__(self):
-        return u"[{0}N,{1}E]".format(self.latitude, self.longitude)
+
+class PositionField(models.Field):
+    __metaclass__ = models.SubfieldBase
+    description = _('position')
+
+    def __init__(self, *args, **kwargs):
+        kwargs['max_length'] = 200
+        if 'default' in kwargs:
+            kwargs['default'] = pickle.dumps(kwargs['default'])
+
+        super(PositionField, self).__init__(*args, **kwargs)
+
+    def get_internal_type(self):
+        return 'CharField'
+
+    def to_python(self, value):
+        if isinstance(value, basestring):
+            return pickle.loads(str(value))
+        return value
+
+    def get_prep_value(self, value):
+        return pickle.dumps(value)
 
 
 class Note(Document):
@@ -68,7 +94,7 @@ class Note(Document):
     text = models.TextField(_('Text'), null=True, blank=True)
     hike = models.ForeignKey(Hike, verbose_name=_('Hike'),
                              related_name='notes')
-    position = models.OneToOneField(Position, null=True, blank=True)
+    position = PositionField(null=True, blank=True)
 
     class Meta:
         ordering = ['date']

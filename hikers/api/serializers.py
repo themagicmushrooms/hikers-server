@@ -74,7 +74,6 @@ class PositionSerializer(WritableField):
             if not longitude:
                 raise forms.ValidationError("Missing 'longitude'")
             p = Position(latitude=latitude, longitude=longitude)
-            print 'will return %s' % p
             return p
         else:
             raise forms.ValidationError("Invalid 'position'")
