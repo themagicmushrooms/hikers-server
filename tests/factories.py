@@ -45,7 +45,3 @@ class NoteFactory(Factory):
     @lazy_attribute
     def text(self):
         return "Almost no snow."
-
-    @lazy_attribute
-    def position(self):
-        return Position(longitude=2.0, latitude=45.0)
