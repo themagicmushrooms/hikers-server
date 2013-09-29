@@ -87,3 +87,10 @@ class NoteSerializer(DocumentSerializerMixin):
         model = Note
         fields = ['uuid', 'revision', 'doc_type', 'date', 'text', 'position',
                   'hike']
+
+    def restore_object(self, attrs, instance=None):
+        initial_uuid = instance.uuid if instance else None
+        note = super(NoteSerializer, self).restore_object(attrs, instance)
+        if initial_uuid:
+            note.uuid = initial_uuid
+        return note
